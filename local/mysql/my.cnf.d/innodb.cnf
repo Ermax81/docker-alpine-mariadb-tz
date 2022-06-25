@@ -1,0 +1,161 @@
+[mysqld]
+
+#***********************************************************************
+#*                 INNODB Specific options
+#***********************************************************************
+
+# The paths to individual data files and their sizes. The full directory path to
+# each data file is formed by concatenating innodb_data_home_dir to each path
+# specified here
+#innodb-data-file-path=system.tbs:10M:autoextend
+
+# The increment size (in MB) for extending the size of an auto-extending
+# tablespace file when it becomes full. Range : 1-1000. Default : 8
+#innodb-autoextend-increment=8
+
+# The common part of the directory path for all InnoDB data files in the
+# shared tablespace
+#innodb-data-home-dir=/myqdata/myserver01/data
+
+# InnoDB creates each new table using its own .ibd file for storing data
+# and indexes, rather than in the shared tablespace
+innodb-file-per-table
+
+# Specify InnoDB shutdown mode : 0,1,2
+# Default : 1
+# 2 : InnoDB will just flush its logs and then shut down cold, as if
+# MySQL had crashed; no committed transaction will be lost, but crash
+# recovery will be done at the next startup
+innodb-fast-shutdown=1
+
+# The crash recovery mode. Possible values are from 0 to 6
+innodb-force-recovery=0
+
+# The timeout in seconds an InnoDB transaction may wait for a row lock
+# before giving up. A transaction that tries to access a row that is locked
+# by another InnoDB transaction will hang for at most this many seconds before
+# issuing the following error: ERROR 1205 (HY000): Lock wait timeout exceeded
+innodb-lock-wait-timeout=50
+
+# The directory path to the InnoDB log files
+#innodb-log-group-home-dir=/myqdata/myserver01/log/innodb
+
+# Controls whether InnoDB creates a file named innodb_status.<pid>
+# in datadir. If enabled, InnoDB periodically writes the output
+# of SHOW ENGINE INNODB STATUS to this file.
+innodb-status-file=0
+
+# The locking mode to use for generating auto-increment values.
+# Range : 0 (traditional), 1 (consecutive), 2 (interleaved)
+innodb-autoinc-lock-mode=1
+
+# InnoDB support for two-phase commit in XA transactions : 0=OFF, 1=ON
+# innodb-support-xa=1     Always supported in 10.3
+
+# The size of the buffer InnoDB uses for buffering log data. As soon as
+# it is full, InnoDB will have to flush it to disk. As it is flushed
+# once per second anyway, it does not make sense to have it very large
+# (even with long transactions).
+innodb-log-buffer-size=3M
+
+# InnoDB, unlike MyISAM, uses a buffer pool to cache both indexes and
+# row data. The bigger you set this the less disk I/O is needed to
+# access data in tables. On a dedicated database server you may set this
+# parameter up to 80% of the machine physical memory size. Do not set it
+# too large, though, because competition of the physical memory may
+# cause paging in the operating system.  Note that on 32bit systems you
+# might be limited to 2-3.5G of user level memory per process, so do not
+# set it too high.
+innodb-buffer-pool-size=5G
+
+# Size of each log file in a log group. You should set the combined size
+# of log files to about 25%-100% of your buffer pool size to avoid
+# unneeded buffer pool flush activity on log file overwrite. However,
+# note that a larger logfile size will increase the time needed for the
+# recovery process.
+innodb-log-file-size=225M
+
+# If set to 1, InnoDB will flush (fsync) the transaction logs to the
+# disk at each commit, which offers full ACID behavior. If you are
+# willing to compromise this safety, and you are running small
+# transactions, you may set this to 0 or 2 to reduce disk I/O to the
+# logs. Value 0 means that the log is only written to the log file and
+# the log file flushed to disk approximately once per second. Value 2
+# means the log is written to the log file at each commit, but the log
+# file is only flushed to disk approximately once per second.
+innodb-flush-log-at-trx-commit=1
+
+# Number of threads allowed inside the InnoDB kernel. The optimal value
+# depends highly on the application, hardware as well as the OS
+# scheduler properties. A too high value may lead to thread thrashing.
+innodb-thread-concurrency=0
+
+# In MySQL 5.1, InnoDB rolls back only the last statement on a
+# transaction timeout by default.
+# If this variable is specified, a transaction timeout causes InnoDB to
+# abort and roll back the entire transaction
+innodb-rollback-on-timeout
+
+# The number of threads that can commit at the same time.
+# Default : O allows any number of transactions to commit simultaneously
+innodb-commit-concurrency=0
+
+# The main thread in InnoDB tries to write pages from the buffer pool so
+# that the percentage of dirty (not yet written) pages will not exceed
+# this value. Range : 0 to 100
+innodb-max-dirty-pages-pct=75
+
+# Disabling this variable can improve access speed for schemas that have
+# a large number of tables or indexes. It can also improve the stability
+# of execution plans for queries that involve InnoDB tables.
+innodb-stats-on-metadata=OFF
+innodb-stats-persistent=ON
+
+# Method using to flush both the data and log files
+# Valid values : O_DSYNC, O_DIRECT
+innodb-flush-method=O_DIRECT
+
+# The default transaction isolation level
+transaction-isolation=REPEATABLE-READ
+
+# If sync-binlog > 0, the MySQL server synchronizes its binary log to disk.
+# There is one write to the binary log per statement if autocommit is enabled,
+# and one write per transaction otherwise.
+# The default value of sync_binlog is 0, which does no synchronizing to disk
+#sync-binlog=0
+
+# MYSQL 5.5 / INNODB > 1.1 parameters
+innodb-adaptive-flushing=1		#[0-1] default=1
+innodb-change-buffering=all		#[inserts|none] default=inserts
+innodb-io-capacity=200			#[100-xxxx] default=200 limit nb of I/O per sec
+innodb-old-blocks-pct=37		#[5-95] default=37
+innodb-old-blocks-time=0		#[0-xxxx] default=0
+innodb-purge-batch-size=20		#[1-5000] default=20
+innodb-purge-threads=1			#[0-1] default=0 no big gain to change it
+innodb-read-ahead-threshold=56		#[0-64] default=56
+innodb-read-io-threads=16		#default=4
+innodb-replication-delay=0		#default=0 replication delay on slave if innodb-thread-concurrency reached
+innodb-spin-wait-delay=6		#[0-xxx] default=6
+innodb-strict-mode=0                    #boolean [O|1] default=O
+innodb-use-native-aio=1                 #boolean [0|1] default=1
+innodb-write-io-threads=16		#default=4
+
+###########################################################################
+# Other InnoDB specific options
+###########################################################################
+innodb-doublewrite			#default=enabled
+innodb-max-purge-lag=0			#[0-4294967295] default=0
+innodb-sync-spin-loops=30		#default=30 nb of wait mutex before thread suspended
+innodb-table-locks=on                   #boolean default=on
+
+# MYSQL 5.6
+innodb-print-all-deadlocks              #boolean default=off
+innodb-page-size=16k                    #[4k|8k|16k] default=16k
+
+# MariaDB 10.4
+#innodb_encrypt_temporary_tables=OFF
+
+# MariaDB 10.5
+innodb-adaptive-hash-index=OFF
+innodb-checksum-algorithm=full_crc32
+#innodb_instant_alter_column_allowed=add_drop_reorder

@@ -1,0 +1,99 @@
+[mysqld]
+
+#Activer en prod
+#safe-user-create
+
+# Enables or disables user-defined partitioning support in the MySQL Server
+partition=ON
+
+# Enable or disable, and start or stop, the event scheduler
+event-scheduler=ON
+
+# This option also applies to database names and table aliases
+# 0 : table names are stored as specified and comparisons are case sensitive
+# 1 : table names are stored in lowercase on disk and comparisons are not case sensitive
+# 2 : table names are stored as given but compared in lowercase
+lower-case-table-names=1
+
+# The default character set and collation that will be used when a new
+# schema or table is created and no character set is defined
+character-set-server=latin1
+collation-server=latin1_general_ci
+
+# The default storage engine that will be used when create new tables
+default-storage-engine=INNODB
+
+# Set the SQL mode to strict
+sql-mode="TRADITIONAL,NO_ENGINE_SUBSTITUTION"
+
+# The maximum amount of concurrent sessions the MySQL server will
+# allow. One of these connections will be reserved for a user with
+# SUPER privileges to allow the administrator to login even if the
+# connection limit has been reached.
+max-connections=151
+
+max_connect_errors=100
+
+max_user_connections=0
+
+# The maximum size of one packet or any generated/intermediate string
+max-allowed-packet=16M
+
+###
+
+# Query cache is used to cache SELECT results and later return them
+# without actual executing the same query once again. Having the query
+# cache enabled may result in significant speed improvements, if your
+# have a lot of identical queries and rarely changing tables. See the
+# "Qcache_lowmem_prunes" status variable to check if the current value
+# is high enough for your load.
+# Note: In case your tables change very often or if your queries are
+# textually different every time, the query cache may result in a
+# slowdown instead of a performance improvement.
+query-cache-type=0
+#query-cache-limit=1M
+query-cache-size=0
+
+# This buffer is allocated when MySQL needs to rebuild the index in
+# REPAIR, OPTIMZE, ALTER table statements as well as in LOAD DATA INFILE
+# into an empty table. It is allocated per thread so be careful with
+# large settings.
+sort-buffer-size=2M
+
+# The number of open tables for all threads. Increasing this value
+# increases the number of file descriptors that mysqld requires
+table-open-cache=256
+
+open_files_limit=0
+
+table_definition_cache=400
+
+thread_stack=299008
+
+# How many threads we should keep in a cache for reuse. When a client
+# disconnects, the client's threads are put in the cache if there aren't
+# more than thread_cache_size threads from before.  This greatly reduces
+# the amount of thread creations needed if you have a lot of new
+# connections. (Normally this doesn't give a notable performance
+# improvement if you have a good thread implementation.)
+thread-cache-size=8
+
+# The maximum size of internal in-memory temporary tables. (The actual
+# limit is determined as the minimum of tmp_table_size and max_heap_table_size.)
+# If an in-memory temporary table exceeds the limit,
+# MySQL automatically converts it to an on-disk MyISAM table
+tmp-table-size=48M
+
+# This variable sets the maximum size to which MEMORY tables are allowed to grow.
+# The value of the variable is used to calculate MEMORY table MAX_ROWS values
+max-heap-table-size=48M
+
+# MYSQL 5.6 :
+# The set of metadata locks can be partitioned into separate hashes to permit
+# connections accessing different objects to use different locking hashes
+# and reduce contention.
+metadata-locks-hash-instances=256
+# Disable the nonstandard behavior on TIMESTAMP
+# Not yet implemented in MARIADB 10.0.21
+#explicit-defaults-for-timestamp=1
+
