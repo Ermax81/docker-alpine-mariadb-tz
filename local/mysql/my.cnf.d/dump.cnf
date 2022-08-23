@@ -1,0 +1,6 @@
+# mysqldump client default options
+[mysqldump]
+# Do not cache each query result
+quick
+# The maximum size of one packet or any generated/intermediate string
+max-allowed-packet=32M
